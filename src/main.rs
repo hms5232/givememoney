@@ -1,17 +1,23 @@
 use std::{env, io};
-use std::collections::HashMap;
+
+use rusty_money::{Money, iso};
 
 fn main() {
     let args: Vec<String> = env::args().collect();
 
-    check_input(&args).expect("Bad arguments.");  // make sure all input is number
+    check_input(&args).expect("Bad arguments: Non-integer found");  // make sure all input is number
 
-    let total = &args[1];  // total money to be allocated
-    let mut member: HashMap<usize, i32> = HashMap::new();
-    println!("Total to be allocated: {}", total);
+    println!("Total to be allocated: {}", &args[1]);
+    let total = Money::from_str(&args[1], iso::TWD).unwrap();  // total money to be allocated
+    let mut ratios: Vec<i32> = vec![];  // allocated ratio, also is subtotal of each one
+    // make ratios
     for i in 2..args.len() {
-        println!("No.{} to join allocated event with {}", i -1 , &args[i]);
-        member.insert(i - 1, (&args[i]).parse::<i32>().unwrap());
+        ratios.push((&args[i]).parse::<i32>().unwrap());
+    }
+    let allocated = total.allocate(ratios).unwrap();  // allocated result (sorted as ratios)
+    // print result with origin price
+    for i in 2..args.len() {
+        println!("No.{} join allocated event with ${} and should pay ${}", i -1 , &args[i], allocated.get(i-2).unwrap().amount());
     }
 }
 
