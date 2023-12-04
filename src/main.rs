@@ -5,6 +5,11 @@ use rusty_money::{Money, iso};
 fn main() {
     let args: Vec<String> = env::args().collect();
 
+    // Current not support interaction mode
+    if args.len() < 2 {
+        println!("Too few arguments.");
+        unimplemented!("Current not support interaction mode")
+    }
     check_input(&args).expect("Bad arguments: Non-integer found");  // make sure all input is number
 
     println!("Total to be allocated: {}", &args[1]);
