@@ -1,5 +1,8 @@
+mod argsort;
+
 use std::{env, io};
 
+use crate::argsort::argsort;
 use rusty_money::{iso, Money};
 
 fn main() {
@@ -39,7 +42,16 @@ fn calculate(input: &[String]) {
     for i in 1..input.len() {
         ratios.push((&input[i]).parse::<i32>().unwrap());
     }
-    let allocated = total.allocate(ratios).unwrap(); // allocated result (sorted as ratios)
+
+    // because a logic error in dependency crate, we should sort input before allocating
+    // see here for detail: https://github.com/varunsrin/rusty_money/issues/103
+    let mut sorted_ratios_index = argsort(&ratios);
+    sorted_ratios_index.reverse();
+    let mut sorted_ratios = ratios.clone();
+    sorted_ratios.sort();
+    sorted_ratios.reverse();
+
+    let allocated = total.allocate(sorted_ratios).unwrap(); // allocated result (sorted as ratios)
 
     // print result with origin price
     for i in 1..input.len() {
@@ -47,7 +59,7 @@ fn calculate(input: &[String]) {
             "No.{} join allocated event with ${} and should pay ${}",
             i,
             &input[i],
-            allocated.get(i - 1).unwrap().amount()
+            allocated.get(sorted_ratios_index[i - 1]).unwrap().amount()
         );
     }
 }
