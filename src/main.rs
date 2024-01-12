@@ -55,11 +55,12 @@ fn calculate(input: &[String]) {
 
     // print result with origin price
     for i in 1..input.len() {
+        let index = sorted_ratios_index.iter().position(|&r| r == (i - 1)).unwrap();
         println!(
             "No.{} join allocated event with ${} and should pay ${}",
             i,
             &input[i],
-            allocated.get(sorted_ratios_index[i - 1]).unwrap().amount()
+            allocated.get(index).unwrap().amount()
         );
     }
 }
