@@ -10,8 +10,9 @@ fn main() {
 
     // Current not support interaction mode
     if args.len() < 2 {
-        println!("Too few arguments.");
-        unimplemented!("Current not support interaction mode")
+        println!("givememoney v{}", env!("CARGO_PKG_VERSION"));
+        println!("To allocate money, input `gmm [total] [each participant separate by space]`");
+        return;
     }
     check_input(&args).expect("Bad arguments: Non-integer found"); // make sure all input is number
 
