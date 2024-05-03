@@ -15,7 +15,20 @@ example:
 ```shell
 gmm 100 40 70
 ```
-result:
+
+result (since v0.2.0):
+
+```
+Total to be allocated: 100
++-----+--------+-----------+
+| No. | Origin | allocated |
++-----+--------+-----------+
+| 1   |     40 |        36 |
++-----+--------+-----------+
+| 2   |     70 |      64.0 |
++-----+--------+-----------+
+```
+result (only v0.1.0):
 
 ```
 Total to be allocated: 100

@@ -1,6 +1,6 @@
 [package]
 name = "givememoney"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 description = "Give me money! A CLI program to help you allocate money."
 readme = "README.md"
@@ -17,4 +17,5 @@ path = "./src/main.rs"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+cli-table = "0.4.7"
 rusty-money = "0.4.1"

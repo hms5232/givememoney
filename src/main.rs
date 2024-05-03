@@ -1,5 +1,7 @@
 mod argsort;
 
+use cli_table::format::Justify;
+use cli_table::{Cell, Style, Table};
 use std::{env, io};
 
 use crate::argsort::argsort;
@@ -55,13 +57,36 @@ fn calculate(input: &[String]) {
     let allocated = total.allocate(sorted_ratios).unwrap(); // allocated result (sorted as ratios)
 
     // print result with origin price
+    let mut table = vec![];
     for i in 1..input.len() {
-        let index = sorted_ratios_index.iter().position(|&r| r == (i - 1)).unwrap();
-        println!(
-            "No.{} join allocated event with ${} and should pay ${}",
-            i,
-            &input[i],
-            allocated.get(index).unwrap().amount()
-        );
+        let index = sorted_ratios_index
+            .iter()
+            .position(|&r| r == (i - 1))
+            .unwrap();
+        // i => origin order from input
+        // &input[i] => origin input value
+        table.push(vec![
+            i.cell(),
+            (&input[i]).cell().justify(Justify::Right),
+            allocated
+                .get(index)
+                .unwrap()
+                .amount()
+                .cell()
+                .justify(Justify::Right),
+        ]);
     }
+    // print result table
+    println!(
+        "{}",
+        table
+            .table()
+            .title(vec![
+                "No.".cell().bold(true),
+                "Origin".cell().bold(true),
+                "allocated".cell().bold(true)
+            ])
+            .display()
+            .unwrap()
+    );
 }
