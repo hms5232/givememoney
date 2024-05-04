@@ -83,8 +83,8 @@ fn calculate(input: &[String]) {
             .table()
             .title(vec![
                 "No.".cell().bold(true),
-                "Origin".cell().bold(true),
-                "allocated".cell().bold(true)
+                "Original".cell().bold(true),
+                "Allocated".cell().bold(true)
             ])
             .display()
             .unwrap()
