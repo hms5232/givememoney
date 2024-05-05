@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  workflow_dispatch:
+  release:
+    types: [ published ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            bin: gmm
+            command: build
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            bin: gmm
+            command: build
+    name: Build/${{ matrix.platform.target }}
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ github.ref_name }}
+      os: ${{ matrix.platform.os }}
+      command: ${{ matrix.platform.command }}
+      bin: ${{ matrix.platform.bin }}
+      target: ${{ matrix.platform.target }}
+      args: "--locked --release"
+      strip: true
+
+  upload:
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - release_for: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            bin: gmm
+            command: build
+          - release_for: x86_64-apple-darwin
+            os: macos-latest
+            target: x86_64-apple-darwin
+            bin: gmm
+            command: build
+
+    runs-on: ${{ matrix.platform.os }}
+
+    name: Upload/${{ matrix.platform.target }}
+    needs:
+      - build
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/download-artifact@v4
+        with:
+          name: ${{ matrix.platform.bin }}_${{ github.ref_name }}_${{ matrix.platform.target }}
+      - name: Rename binary
+        run: mv ${{ matrix.platform.bin }} ${{ matrix.platform.bin }}_${{ github.ref_name }}_${{ matrix.platform.target }}
+      - name: Upload binary
+        uses: softprops/action-gh-release@v1
+        with:
+          files: ${{ matrix.platform.bin }}_${{ github.ref_name }}_${{ matrix.platform.target }}

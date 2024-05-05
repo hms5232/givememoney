@@ -40,7 +40,7 @@ No.2 join allocated event with $70 and should pay $64
 
 ### Binary
 
-Download from [GitHub Release](https://github.com/hms5232/givememoney/releases) page.
+Download from [GitHub Release](https://github.com/hms5232/givememoney/releases) page (and `chmod +x gmm` if not executable).
 
 ### Source
 

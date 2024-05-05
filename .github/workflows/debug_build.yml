@@ -1,0 +1,35 @@
+name: Debug build
+
+on:
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        platform:
+          - target: x86_64-unknown-linux-gnu
+            os: ubuntu-latest
+            bin: gmm
+            command: build
+          - target: x86_64-apple-darwin
+            os: macos-latest
+            bin: gmm
+            command: build
+    name: ${{ matrix.platform.target }}
+    uses: ./.github/workflows/build.yml
+    with:
+      version: ${{ github.sha }}
+      os: ${{ matrix.platform.os }}
+      binary-mode: debug
+      command: ${{ matrix.platform.command }}
+      bin: ${{ matrix.platform.bin }}
+      target: ${{ matrix.platform.target }}
+      args: "--locked"
+      strip: true
