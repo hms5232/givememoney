@@ -1,10 +1,7 @@
-mod argsort;
-
 use cli_table::format::Justify;
 use cli_table::{Cell, Style, Table};
 use std::{env, io};
 
-use crate::argsort::argsort;
 use rusty_money::{iso, Money};
 
 fn main() {
@@ -46,29 +43,18 @@ fn calculate(input: &[String]) {
         ratios.push((&input[i]).parse::<i32>().unwrap());
     }
 
-    // because a logic error in dependency crate, we should sort input before allocating
-    // see here for detail: https://github.com/varunsrin/rusty_money/issues/103
-    let mut sorted_ratios_index = argsort(&ratios);
-    ratios.reverse();
-    let mut sorted_ratios = ratios.clone();
-    sorted_ratios.sort();
-
-    let allocated = total.allocate(sorted_ratios).unwrap(); // allocated result (sorted as ratios)
+    let allocated = total.allocate(ratios).unwrap(); // allocated result
 
     // print result with origin price
     let mut table = vec![];
     for i in 1..input.len() {
-        let index = sorted_ratios_index
-            .iter()
-            .position(|&r| r == (i - 1))
-            .unwrap();
         // i => origin order from input
         // &input[i] => origin input value
         table.push(vec![
             i.cell(),
             (&input[i]).cell().justify(Justify::Right),
             allocated
-                .get(index)
+                .get(i - 1)
                 .unwrap()
                 .amount()
                 .cell()
