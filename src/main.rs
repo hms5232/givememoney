@@ -49,10 +49,9 @@ fn calculate(input: &[String]) {
     // because a logic error in dependency crate, we should sort input before allocating
     // see here for detail: https://github.com/varunsrin/rusty_money/issues/103
     let mut sorted_ratios_index = argsort(&ratios);
-    sorted_ratios_index.reverse();
+    ratios.reverse();
     let mut sorted_ratios = ratios.clone();
     sorted_ratios.sort();
-    sorted_ratios.reverse();
 
     let allocated = total.allocate(sorted_ratios).unwrap(); // allocated result (sorted as ratios)
 
