@@ -1,7 +1,6 @@
 use std::{env, io};
 
-mod abacus;
-mod display;
+mod mission;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
@@ -14,8 +13,9 @@ fn main() {
     }
     check_input(&args).expect("Bad arguments: Non-integer found"); // make sure all input is number
 
-    let input = &args[1..args.len()];
-    display::table(input)
+    mission::Round::new(&args[1..args.len()])
+        .allocate()
+        .display();
 }
 
 /// Check if all arguments is number.
