@@ -12,13 +12,20 @@ struct Player<'a> {
 }
 
 impl Player<'_> {
-    fn new(index: usize, original: String) -> Self {
+    fn new(index: usize, input: String) -> Self {
+        let mut name = None;
+        let mut original = input;
+        if original.contains("=") {
+            let split: Vec<&str> = original.split("=").collect();
+            name = Some(split[0].to_string());
+            original = split[1].to_string();
+        }
         Self {
             index,
             number: index + 1,
             original,
             allocated: None,
-            name: None,
+            name,
         }
     }
 
@@ -47,6 +54,14 @@ impl Player<'_> {
     //     todo!("FIXME: assignment requires that `'1` must outlive `'2`");
     //     self.allocated = Some(money)
     // }
+
+    /// get player's name or number (if name not provided)
+    fn get_player_name_or_number(&self) -> String {
+        match self.name.as_ref() {
+            Some(name) => name.to_owned(),
+            None => self.number.to_string(),
+        }
+    }
 }
 
 pub struct Round<'a> {
@@ -102,7 +117,7 @@ impl Round<'_> {
         let mut table = Vec::new();
         self.players.iter().for_each(|p| {
             table.push(vec![
-                p.get_number().cell(),
+                p.get_player_name_or_number().cell(),
                 p.get_original().cell().justify(Justify::Right),
                 self.result
                     .as_ref()
@@ -120,7 +135,7 @@ impl Round<'_> {
             table
                 .table()
                 .title(vec![
-                    "No.".cell().bold(true),
+                    "No./Name".cell().bold(true),
                     "Original".cell().bold(true),
                     "Allocated".cell().bold(true)
                 ])

@@ -21,6 +21,17 @@ fn main() {
 /// Check if all arguments is number.
 fn check_input(args: &Vec<String>) -> Result<(), io::Error> {
     for i in 1..args.len() {
+        // specify the participant name
+        if args[i].contains("=") {
+            match args[i].split("=").collect::<Vec<_>>()[1].parse::<i32>() {
+                Ok(_number) => (),
+                Err(e) => {
+                    eprintln!("Unable to parse number from name and value: {}", args[i])
+                }
+            }
+            continue;
+        }
+        // only amount
         match args[i].parse::<i32>() {
             Ok(_number) => (),
             Err(e) => {
