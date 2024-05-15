@@ -107,6 +107,7 @@ impl Round<'_> {
 
     /// Display result
     pub fn display(&self) {
+        println!("Total to be allocated: {}", self.total);
         match self.display_format {
             Format::Table => self.display_table(),
         }

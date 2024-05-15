@@ -48,6 +48,7 @@ gmm 100 30 bar=20 foo=40 50
 it will print:
 
 ```
+Total to be allocated: $100.00
 +----------+----------+-----------+
 | No./Name | Original | Allocated |
 +----------+----------+-----------+
