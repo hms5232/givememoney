@@ -64,6 +64,6 @@ jobs:
       - name: Rename binary
         run: mv ${{ matrix.platform.bin }} ${{ matrix.platform.bin }}_${{ github.ref_name }}_${{ matrix.platform.target }}
       - name: Upload binary
-        uses: softprops/action-gh-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           files: ${{ matrix.platform.bin }}_${{ github.ref_name }}_${{ matrix.platform.target }}
