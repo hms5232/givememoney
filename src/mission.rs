@@ -15,8 +15,8 @@ impl Player<'_> {
     fn new(index: usize, input: String) -> Self {
         let mut name = None;
         let mut original = input;
-        if original.contains("=") {
-            let split: Vec<&str> = original.split("=").collect();
+        if original.contains('=') {
+            let split: Vec<&str> = original.split('=').collect();
             name = Some(split[0].to_string());
             original = split[1].to_string();
         }
@@ -75,8 +75,8 @@ impl Round<'_> {
     pub fn new(input: &[String]) -> Self {
         let mut players = vec![];
         let buy_amount = &input[1..];
-        for i in 0..buy_amount.len() {
-            players.push(Player::new(i, buy_amount[i].to_owned()));
+        for (i, item) in buy_amount.iter().enumerate() {
+            players.push(Player::new(i, item.to_owned()));
         }
         Self {
             total: Money::from_str(&input[0], iso::TWD).unwrap(),
