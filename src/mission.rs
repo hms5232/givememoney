@@ -150,3 +150,67 @@ impl Round<'_> {
 pub enum Format {
     Table,
 }
+
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn test_get_ratios() {
+        // init input example from README
+        let args = vec![String::from("100"), String::from("40"), String::from("70")];
+        let input: &[String] = &args[..];
+
+        assert_eq!(Round::new(input).get_ratios(), vec![40, 70]);
+    }
+
+    #[test]
+    fn test_allocate() {
+        // init input example from README
+        let args = vec![String::from("100"), String::from("40"), String::from("70")];
+        let input: &[String] = &args[..];
+
+        assert_eq!(
+            Round::new(input).allocate().result.as_ref().unwrap(),
+            &vec![
+                Money::from_str("36", iso::TWD).unwrap(),
+                Money::from_str("64", iso::TWD).unwrap(),
+            ]
+        );
+    }
+
+    #[test]
+    fn test_unnamed_player() {
+        // init input
+        let args = vec![String::from("100"), String::from("40"), String::from("70")];
+        let input: &[String] = &args[..];
+
+        let mut displayed_name = Vec::new();
+        Round::new(input)
+            .players
+            .iter()
+            .for_each(|p| displayed_name.push(p.get_player_name_or_number()));
+        // all players are anonymous, so give them a number (as input order)
+        assert_eq!(displayed_name, vec!["1", "2"]);
+    }
+
+    #[test]
+    fn test_named_player() {
+        // init input
+        let args = vec![
+            String::from("100"),
+            String::from("40"),
+            String::from("Alice=70"),
+        ];
+        let input: &[String] = &args[..];
+
+        let mut displayed_name = Vec::new();
+        Round::new(input)
+            .players
+            .iter()
+            .for_each(|p| displayed_name.push(p.get_player_name_or_number()));
+        // one player is named as "Alice" at second input,
+        // so first is number and second is given name.
+        assert_eq!(displayed_name, vec!["1", "Alice"]);
+    }
+}
