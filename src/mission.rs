@@ -3,15 +3,15 @@ use cli_table::{Cell, Style, Table};
 use rusty_money::iso::Currency;
 use rusty_money::{iso, Money};
 
-struct Player<'a> {
+struct Player {
     index: usize,
     number: usize,
     original: String,
-    allocated: Option<Money<'a, Currency>>,
+    allocated: Option<String>,
     name: Option<String>,
 }
 
-impl Player<'_> {
+impl Player {
     fn new(index: usize, input: String) -> Self {
         let mut name = None;
         let mut original = input;
@@ -45,15 +45,14 @@ impl Player<'_> {
     }
 
     /// get allocated amount
-    fn get_allocated(&self) -> Money<Currency> {
-        self.allocated.unwrap()
+    fn get_allocated(&self) -> String {
+        self.allocated.to_owned().unwrap()
     }
 
-    // /// update allocated result to player
-    // fn set_allocated(&mut self, money: Money<Currency>) {
-    //     todo!("FIXME: assignment requires that `'1` must outlive `'2`");
-    //     self.allocated = Some(money)
-    // }
+    /// update allocated result to player
+    fn set_allocated(&mut self, money: Money<Currency>) {
+        self.allocated = Some(money.amount().to_string())
+    }
 
     /// get player's name or number (if name not provided)
     fn get_player_name_or_number(&self) -> String {
@@ -66,7 +65,7 @@ impl Player<'_> {
 
 pub struct Round<'a> {
     total: Money<'a, Currency>,
-    players: Vec<Player<'a>>,
+    players: Vec<Player>,
     display_format: Format,
     result: Option<Vec<Money<'a, Currency>>>,
 }
@@ -90,8 +89,8 @@ impl Round<'_> {
     pub fn allocate(&mut self) -> &Round<'_> {
         // get the allocated result and update to field
         self.result = Some(self.total.allocate(self.get_ratios()).unwrap());
-        // TODO: update result to each player struct
-        // self.players.iter_mut().for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.get_index()]));
+        // update result to each player struct
+        self.players.iter_mut().for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.get_index()]));
 
         self
     }
