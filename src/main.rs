@@ -21,19 +21,12 @@ fn main() {
 /// Check if all arguments is number.
 fn check_input(args: &[String]) -> Result<(), io::Error> {
     for i in args.iter().skip(1) {
+        let mut money_from_input = i.as_str();
         // specify the participant name
         if i.contains('=') {
-            match i.split('=').collect::<Vec<_>>()[1].parse::<i32>() {
-                Ok(_number) => (),
-                Err(e) => {
-                    eprintln!("Unable to parse number from name and value: {}", i);
-                    return Err(io::Error::new(io::ErrorKind::Other, e));
-                }
-            }
-            continue;
+            money_from_input = i.split('=').collect::<Vec<_>>()[1];
         }
-        // only amount
-        match i.parse::<i32>() {
+        match money_from_input.parse::<i32>() {
             Ok(_number) => (),
             Err(e) => {
                 eprintln!("Unable to parse number from argument: {}", i);
