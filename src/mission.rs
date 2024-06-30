@@ -90,7 +90,9 @@ impl Round<'_> {
         // get the allocated result and update to field
         self.result = Some(self.total.allocate(self.get_ratios()).unwrap());
         // update result to each player struct
-        self.players.iter_mut().for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.get_index()]));
+        self.players
+            .iter_mut()
+            .for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.get_index()]));
 
         self
     }
