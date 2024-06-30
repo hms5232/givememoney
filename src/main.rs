@@ -36,3 +36,35 @@ fn check_input(args: &[String]) -> Result<(), io::Error> {
     }
     Ok(())
 }
+
+#[cfg(test)]
+mod test_fn_check_input {
+    use super::check_input;
+
+    #[test]
+    fn input_number() {
+        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        input.push(String::from("40"));
+        input.push(String::from("70"));
+
+        assert!(check_input(&input).is_ok());
+    }
+
+    #[test]
+    fn input_with_name() {
+        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        input.push(String::from("Alex=40"));
+        input.push(String::from("70"));
+
+        assert!(check_input(&input).is_ok());
+    }
+
+    #[test]
+    fn input_non_number() {
+        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        input.push(String::from("Vicky"));
+        input.push(String::from("70"));
+
+        assert!(check_input(&input).is_err());
+    }
+}
