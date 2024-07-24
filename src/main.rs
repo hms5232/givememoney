@@ -11,7 +11,11 @@ fn main() {
         println!("To allocate money, input `gmm [total] [each participant separate by space]`");
         return;
     }
-    check_input(&args).expect("Bad arguments: Non-integer found"); // make sure all input is number
+    // make sure all input is number or valid format: name=number
+    if check_input(&args).is_err() {
+        eprintln!("Bad arguments: Non-integer found");
+        return;
+    }
 
     mission::Round::new(&args[1..args.len()])
         .allocate()
@@ -20,7 +24,7 @@ fn main() {
 
 /// Check if all arguments is number.
 fn check_input(args: &[String]) -> Result<(), io::Error> {
-    for i in args.iter().skip(1) {
+    for (n, i) in args.iter().skip(1).enumerate() {
         let mut money_from_input = i.as_str();
         // specify the participant name
         if i.contains('=') {
@@ -29,7 +33,17 @@ fn check_input(args: &[String]) -> Result<(), io::Error> {
         match money_from_input.parse::<i32>() {
             Ok(_number) => (),
             Err(e) => {
-                eprintln!("Unable to parse number from argument: {}", i);
+                if n == 0 {
+                    eprintln!(
+                        "The first argument must be total amount of money, should not with name."
+                    );
+                } else {
+                    eprintln!(
+                        "Unable to parse number from argument (position: {}): {}",
+                        n + 1,
+                        i
+                    );
+                }
                 return Err(io::Error::new(io::ErrorKind::Other, e));
             }
         }
