@@ -12,7 +12,7 @@ fn main() {
         return;
     }
     // make sure all input is number or valid format: name=number
-    if check_input(&args).is_err() {
+    if check_input(&args[1..]).is_err() {
         eprintln!("Bad arguments: Non-integer found");
         return;
     }
@@ -24,7 +24,7 @@ fn main() {
 
 /// Check if all arguments is number.
 fn check_input(args: &[String]) -> Result<(), io::Error> {
-    for (n, i) in args.iter().skip(1).enumerate() {
+    for (n, i) in args.iter().enumerate() {
         let mut money_from_input = i.as_str();
         // specify the participant name
         if i.contains('=') {
@@ -57,7 +57,7 @@ mod test_fn_check_input {
 
     #[test]
     fn input_number() {
-        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        let mut input: Vec<String> = vec![String::from("100")];
         input.push(String::from("40"));
         input.push(String::from("70"));
 
@@ -66,7 +66,7 @@ mod test_fn_check_input {
 
     #[test]
     fn input_with_name() {
-        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        let mut input: Vec<String> = vec![String::from("100")];
         input.push(String::from("Alex=40"));
         input.push(String::from("70"));
 
@@ -75,7 +75,7 @@ mod test_fn_check_input {
 
     #[test]
     fn input_non_number() {
-        let mut input: Vec<String> = vec![String::from("gmm"), String::from("100")];
+        let mut input: Vec<String> = vec![String::from("100")];
         input.push(String::from("Vicky"));
         input.push(String::from("70"));
 
