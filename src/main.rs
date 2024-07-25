@@ -22,7 +22,27 @@ fn main() {
         .display();
 }
 
-/// Check if all arguments is number.
+/// Check if all arguments is number or valid format.
+///
+/// # Arguments
+///
+/// * `args` - Input need check
+///
+/// # Errors
+///
+/// If input is not number or valid format, return `io::ErrorKind::Other`
+///
+/// # Examples
+///
+/// ```rust
+/// assert!(check_input(["100".to_string(), "40".to_string(), "70".to_string()]).is_ok());
+///
+/// assert!(check_input(["100".to_string(), "Alice=40".to_string(), "70".to_string()]).is_ok());
+///
+/// assert!(check_input(["100".to_string(), "40".to_string(), "Bob".to_string()]).is_err());
+///
+/// assert!(check_input(["Hi".to_string(), "100".to_string(), "40".to_string(), "Bob".to_string()]).is_err());
+/// ```
 fn check_input(args: &[String]) -> Result<(), io::Error> {
     for (n, i) in args.iter().enumerate() {
         let mut money_from_input = i.as_str();

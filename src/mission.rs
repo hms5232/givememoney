@@ -85,7 +85,7 @@ impl Round<'_> {
         }
     }
 
-    /// Start allocating money
+    /// Allocate money and fill result to self and each player field.
     pub fn allocate(&mut self) -> &Round<'_> {
         // get the allocated result and update to field
         self.result = Some(self.total.allocate(self.get_ratios()).unwrap());
