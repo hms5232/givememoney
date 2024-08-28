@@ -66,14 +66,26 @@ Total to be allocated: $100.00
 
 ### Binary
 
-Download from [GitHub Release](https://github.com/hms5232/givememoney/releases) page (and `chmod +x gmm` if not executable).
+Currently, we provide pre-compiled binaries for the following targets:
+
+* x86_64-unknown-linux-gnu
+* x86_64-apple-darwin
+
+Download from [GitHub Release](https://github.com/hms5232/givememoney/releases) page or run
+(replace `x86_64-unknown-linux-gnu` with your target):
+
+```shell
+wget -O gmm $(curl -s https://api.github.com/repos/hms5232/givememoney/releases/latest | grep "browser_download_url" | grep "x86_64-unknown-linux-gnu" | awk '{ print $2 }' | sed 's/"//g')
+```
+
+then `chmod +x gmm` if not executable.
 
 ### Source
 
-1. Clone this repo and insure device has cargo installed.
+1. Clone this repo and ensure the device has cargo installed.
 2. `cd` into project dir and
-   1. run `cargo run -- [total to be allocated] [each participant]`.
-   2. run `cargo build --release` to build binary.
+    1. run `cargo run -- [total to be allocated] [each participant]`.
+    2. run `cargo build --release` to build binary.
 
 ## LICENSE
 
