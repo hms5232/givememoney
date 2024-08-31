@@ -1,4 +1,4 @@
-use std::{env, io};
+use std::env;
 
 mod mission;
 
@@ -43,7 +43,7 @@ fn main() {
 ///
 /// assert!(check_input(["Hi".to_string(), "100".to_string(), "40".to_string(), "Bob".to_string()]).is_err());
 /// ```
-fn check_input(args: &[String]) -> Result<(), io::Error> {
+fn check_input(args: &[String]) -> Result<(), std::num::ParseIntError> {
     for (n, i) in args.iter().enumerate() {
         let mut money_from_input = i.as_str();
         // specify the participant name
@@ -64,7 +64,7 @@ fn check_input(args: &[String]) -> Result<(), io::Error> {
                         i
                     );
                 }
-                return Err(io::Error::new(io::ErrorKind::Other, e));
+                return Err(e);
             }
         }
     }
