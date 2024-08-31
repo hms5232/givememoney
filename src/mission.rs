@@ -34,7 +34,7 @@ impl Player {
         self.index
     }
 
-    /// get number (no.) of player
+    /// get number (no.) of the player
     fn get_number(&self) -> usize {
         self.number
     }
@@ -49,7 +49,7 @@ impl Player {
         self.allocated.to_owned().unwrap()
     }
 
-    /// update allocated result to player
+    /// update result of allocated to player
     fn set_allocated(&mut self, money: Money<Currency>) {
         self.allocated = Some(money.amount().to_string())
     }
@@ -85,7 +85,7 @@ impl Round<'_> {
         }
     }
 
-    /// Allocate money and fill result to self and each player field.
+    /// Allocate money and fill result into self and each player field.
     pub fn allocate(&mut self) -> &Round<'_> {
         // get the allocated result and update to field
         self.result = Some(self.total.allocate(self.get_ratios()).unwrap());

@@ -11,7 +11,7 @@ fn main() {
         println!("To allocate money, input `gmm [total] [each participant separate by space]`");
         return;
     }
-    // make sure all input is number or valid format: name=number
+    // make sure all inputs are number or valid format: name=number
     if check_input(&args[1..]).is_err() {
         eprintln!("Bad arguments: Non-integer found");
         return;
@@ -22,11 +22,11 @@ fn main() {
         .display();
 }
 
-/// Check if all arguments is number or valid format.
+/// Check if all arguments are number or valid format.
 ///
 /// # Arguments
 ///
-/// * `args` - Input need check
+/// * `args` - Input needs check
 ///
 /// # Errors
 ///

@@ -39,7 +39,7 @@ No.2 join allocated event with $70 and should pay $64
 
 ------
 
-since v0.2.1, support `name=amount` format. Consider the following example:
+Since v0.2.1, support `name=amount` format. Consider the following example:
 
 ```
 gmm 100 30 bar=20 foo=40 50
