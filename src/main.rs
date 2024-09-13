@@ -7,8 +7,18 @@ fn main() {
 
     // Current not support interaction mode
     if args.len() < 2 {
-        println!("givememoney v{}", env!("CARGO_PKG_VERSION"));
-        println!("To allocate money, input `gmm [total] [each participant separate by space]`");
+        println!(
+            "{}",
+            format!(
+                "\
+                givememoney v{}\n\
+                To allocate money, input `gmm [total] [each participant separate by space]`\n\
+                \n\
+                Check https://github.com/hms5232/givememoney for more information and update.\
+                ",
+                env!("CARGO_PKG_VERSION")
+            )
+        );
         return;
     }
     // make sure all inputs are number or valid format: name=number
