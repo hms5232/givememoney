@@ -58,7 +58,8 @@ fn check_input(args: &[String]) -> Result<(), std::num::ParseIntError> {
     for (n, i) in args.iter().enumerate() {
         let mut money_from_input = i.as_str();
         // specify the participant name
-        if i.contains('=') {
+        // the first argument shouldn't split
+        if i.contains('=') && n != 0 {
             money_from_input = i.split('=').collect::<Vec<_>>()[1];
         }
         match money_from_input.parse::<i32>() {
