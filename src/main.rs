@@ -14,9 +14,10 @@ fn main() {
                 givememoney v{}\n\
                 To allocate money, input `gmm [total] [each participant separate by space]`\n\
                 \n\
-                Check https://github.com/hms5232/givememoney for more information and update.\
+                Check {} for more information and update.\
                 ",
-                env!("CARGO_PKG_VERSION")
+                env!("CARGO_PKG_VERSION"),
+                env!("CARGO_PKG_REPOSITORY"),
             )
         );
         return;
