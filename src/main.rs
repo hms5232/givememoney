@@ -24,7 +24,6 @@ fn main() {
     }
     // make sure all inputs are number or valid format: name=number
     if check_input(&args[1..]).is_err() {
-        eprintln!("Bad arguments: Non-integer found");
         return;
     }
 
@@ -54,33 +53,37 @@ fn main() {
 ///
 /// assert!(check_input(["Hi".to_string(), "100".to_string(), "40".to_string(), "Bob".to_string()]).is_err());
 /// ```
-fn check_input(args: &[String]) -> Result<(), std::num::ParseIntError> {
-    for (n, i) in args.iter().enumerate() {
+fn check_input(args: &[String]) -> Result<(), &str> {
+    // check total (first argument)
+    if !is_natural_number(args.get(0).unwrap()) {
+        eprintln!("The first argument must be total amount of money, should not with name.");
+        return Err("Bad argument: the first argument should be total.");
+    }
+    // check player(s)
+    for (n, i) in args.iter().skip(1).enumerate() {
         let mut money_from_input = i.as_str();
         // specify the participant name
-        // the first argument shouldn't split
-        if i.contains('=') && n != 0 {
+        if i.contains('=') {
             money_from_input = i.split('=').collect::<Vec<_>>()[1];
         }
-        match money_from_input.parse::<i32>() {
-            Ok(_number) => (),
-            Err(e) => {
-                if n == 0 {
-                    eprintln!(
-                        "The first argument must be total amount of money, should not with name."
-                    );
-                } else {
-                    eprintln!(
-                        "Unable to parse number from argument (position: {}): {}",
-                        n + 1,
-                        i
-                    );
-                }
-                return Err(e);
-            }
+        if !is_natural_number(money_from_input) {
+            eprintln!(
+                "Unable to parse number from argument (position: {}): {}",
+                n + 1,
+                i
+            );
+            return Err("Bad argument: non-integer found.");
         }
     }
     Ok(())
+}
+
+/// Check given value is natural number or not.
+fn is_natural_number(value: &str) -> bool {
+    match value.parse::<i32>() {
+        Ok(_number) => true,
+        Err(_e) => false,
+    }
 }
 
 #[cfg(test)]
