@@ -29,6 +29,9 @@ Total to be allocated: 100
 +-----+----------+-----------+
 ```
 
+<details>
+<summary>result (only v0.1.0)</summary>
+
 result (only v0.1.0):
 
 ```
@@ -36,6 +39,8 @@ Total to be allocated: 100
 No.1 join allocated event with $40 and should pay $36
 No.2 join allocated event with $70 and should pay $64
 ```
+
+</details>
 
 ------
 
