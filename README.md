@@ -75,6 +75,7 @@ Currently, we provide pre-compiled binaries for the following targets:
 
 * x86_64-unknown-linux-gnu
 * x86_64-apple-darwin
+* x86_64-pc-windows-msvc
 
 Download from [GitHub Release](https://github.com/hms5232/givememoney/releases) page or run
 (replace `x86_64-unknown-linux-gnu` with your target):

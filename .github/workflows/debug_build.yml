@@ -22,6 +22,10 @@ jobs:
             os: macos-latest
             bin: gmm
             command: build
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            bin: gmm.exe
+            command: build
     name: ${{ matrix.platform.target }}
     uses: ./.github/workflows/build.yml
     with:
