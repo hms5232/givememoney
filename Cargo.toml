@@ -1,6 +1,6 @@
 [package]
 name = "givememoney"
-version = "0.2.2"
+version = "1.0.0"
 edition = "2021"
 description = "Give me money! A CLI program to help you allocate money."
 readme = "README.md"
