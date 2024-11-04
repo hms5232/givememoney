@@ -16,35 +16,20 @@ example:
 gmm 100 40 70
 ```
 
-result (since v0.2.0):
+result:
 
 ```
-Total to be allocated: 100
-+-----+----------+-----------+
-| No. | Original | Allocated |
-+-----+----------+-----------+
-| 1   |       40 |        36 |
-+-----+----------+-----------+
-| 2   |       70 |        64 |
-+-----+----------+-----------+
+Total to be allocated: $100.00
++----------+----------+-----------+
+| No./Name | Original | Allocated |
++----------+----------+-----------+
+| 1        |       40 |       $36 |
++----------+----------+-----------+
+| 2        |       70 |       $64 |
++----------+----------+-----------+
 ```
 
-<details>
-<summary>result (only v0.1.0)</summary>
-
-result (only v0.1.0):
-
-```
-Total to be allocated: 100
-No.1 join allocated event with $40 and should pay $36
-No.2 join allocated event with $70 and should pay $64
-```
-
-</details>
-
-------
-
-Since v0.2.1, support `name=amount` format. Consider the following example:
+This program also support named participants by using `name=amount` format. Consider the following example:
 
 ```
 gmm 100 30 bar=20 foo=40 50
@@ -67,7 +52,7 @@ Total to be allocated: $100.00
 +----------+----------+-----------+
 ```
 
-## Install
+## Installation
 
 ### Binary
 
