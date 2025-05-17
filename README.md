@@ -56,7 +56,7 @@ Total to be allocated: $100.00
 
 ### Binary
 
-Currently, we provide pre-compiled binaries for the following targets:
+Currently, we provide pre-compiled binaries for the following targets (target triple format):
 
 * x86_64-unknown-linux-gnu
 * x86_64-apple-darwin
