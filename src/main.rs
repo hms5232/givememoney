@@ -1,9 +1,11 @@
 use std::env;
+use std::io::Write;
 
 mod mission;
 
 fn main() {
-    let args: Vec<String> = env::args().collect();
+    let mut args: Vec<String> = env::args().collect();
+    let mut windows_direct_run = false;
 
     // Current not support interaction mode
     if args.len() < 2 {
@@ -20,16 +22,42 @@ fn main() {
                 env!("CARGO_PKG_REPOSITORY"),
             )
         );
-        return;
+        #[cfg(not(target_os = "windows"))]
+        {
+            return;
+        }
+
+        #[cfg(target_os = "windows")]
+        {
+            // show "gmm " and wait for user input money args
+            println!();
+            print!("gmm ");
+            std::io::stdout().flush().unwrap();
+            // get user input and write to args
+            let mut input = String::new();
+            std::io::stdin()
+                .read_line(&mut input)
+                .expect("Failed to read line");
+            args = input.split_whitespace().map(|s| s.to_string()).collect();
+            args.insert(0, "gmm ".to_string()); // make args like the usage from Unix-like target
+            windows_direct_run = true;
+        }
     }
     // make sure all inputs are number or valid format: name=number
     if check_input(&args[1..]).is_err() {
+        if windows_direct_run {
+            press_enter_to_exit();
+        }
         return;
     }
 
     mission::Round::new(&args[1..args.len()])
         .allocate()
         .display();
+
+    if windows_direct_run {
+        press_enter_to_exit()
+    }
 }
 
 /// Check if all arguments are number or valid format.
@@ -84,6 +112,15 @@ fn is_natural_number(value: &str) -> bool {
         Ok(_number) => true,
         Err(_e) => false,
     }
+}
+
+/// Show "Press enter to exit" and wait for user input
+fn press_enter_to_exit() {
+    println!("Press enter to exit.");
+    let mut input = String::new();
+    std::io::stdin()
+        .read_line(&mut input)
+        .expect("Failed to read line");
 }
 
 #[cfg(test)]
