@@ -10,17 +10,14 @@ fn main() {
     // Current not support interaction mode
     if args.len() < 2 {
         println!(
-            "{}",
-            format!(
-                "\
-                givememoney v{}\n\
-                To allocate money, input `gmm [total] [each participant separate by space]`\n\
-                \n\
-                Check {} for more information and update.\
-                ",
-                env!("CARGO_PKG_VERSION"),
-                env!("CARGO_PKG_REPOSITORY"),
-            )
+            "\
+            givememoney v{}\n\
+            To allocate money, input `gmm [total] [each participant separate by space]`\n\
+            \n\
+            Check {} for more information and update.\
+            ",
+            env!("CARGO_PKG_VERSION"),
+            env!("CARGO_PKG_REPOSITORY"),
         );
         #[cfg(not(target_os = "windows"))]
         {
