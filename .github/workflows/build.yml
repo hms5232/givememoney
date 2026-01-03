@@ -52,7 +52,7 @@ jobs:
 
     name: ${{ inputs.bin }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Build
         uses: houseabsolute/actions-rust-cross@v0
         with:
