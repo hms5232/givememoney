@@ -5,10 +5,10 @@ mod mission;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();
-    let mut windows_direct_run = false;
+    let run_without_parameters = args.len() < 2;
 
-    // Current not support interaction mode
-    if args.len() < 2 {
+    // If no parameters or not enough parameters, show usage and wait for user input
+    while args.len() < 3 {
         println!(
             "\
             givememoney v{}\n\
@@ -19,30 +19,22 @@ fn main() {
             env!("CARGO_PKG_VERSION"),
             env!("CARGO_PKG_REPOSITORY"),
         );
-        #[cfg(not(target_os = "windows"))]
-        {
-            return;
-        }
 
-        #[cfg(target_os = "windows")]
-        {
-            // show "gmm " and wait for user input money args
-            println!();
-            print!("gmm ");
-            std::io::stdout().flush().unwrap();
-            // get user input and write to args
-            let mut input = String::new();
-            std::io::stdin()
-                .read_line(&mut input)
-                .expect("Failed to read line");
-            args = input.split_whitespace().map(|s| s.to_string()).collect();
-            args.insert(0, "gmm ".to_string()); // make args like the usage from Unix-like target
-            windows_direct_run = true;
-        }
+        // show "gmm " and wait for user input money args
+        println!();
+        print!("> gmm ");
+        std::io::stdout().flush().unwrap();
+        // get user input and write to args
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+        args = input.split_whitespace().map(|s| s.to_string()).collect();
+        args.insert(0, "gmm ".to_string()); // make args like the usage from Unix-like target
     }
     // make sure all inputs are number or valid format: name=number
     if check_input(&args[1..]).is_err() {
-        if windows_direct_run {
+        if run_without_parameters {
             press_enter_to_exit();
         }
         return;
@@ -52,7 +44,7 @@ fn main() {
         .allocate()
         .display();
 
-    if windows_direct_run {
+    if run_without_parameters {
         press_enter_to_exit()
     }
 }
@@ -113,11 +105,18 @@ fn is_natural_number(value: &str) -> bool {
 
 /// Show "Press enter to exit" and wait for user input
 fn press_enter_to_exit() {
-    println!("Press enter to exit.");
-    let mut input = String::new();
-    std::io::stdin()
-        .read_line(&mut input)
-        .expect("Failed to read line");
+    #[cfg(not(target_os = "windows"))]
+    {
+        return;
+    }
+    #[cfg(target_os = "windows")]
+    {
+        println!("Press enter to exit.");
+        let mut input = String::new();
+        std::io::stdin()
+            .read_line(&mut input)
+            .expect("Failed to read line");
+    }
 }
 
 #[cfg(test)]
