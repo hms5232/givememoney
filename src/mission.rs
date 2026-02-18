@@ -1,13 +1,12 @@
+use crate::money::Money;
 use cli_table::format::Justify;
 use cli_table::{Cell, Style, Table};
-use rusty_money::iso::Currency;
-use rusty_money::{iso, Money};
 
 struct Player {
     index: usize,
     number: usize,
     original: String,
-    allocated: Option<String>,
+    allocated: Option<u32>,
     name: Option<String>,
 }
 
@@ -46,12 +45,12 @@ impl Player {
 
     /// get allocated amount
     fn get_allocated(&self) -> String {
-        self.allocated.to_owned().unwrap()
+        self.allocated.unwrap().to_string()
     }
 
     /// update result of allocated to player
-    fn set_allocated(&mut self, money: Money<Currency>) {
-        self.allocated = Some(money.amount().to_string())
+    fn set_allocated(&mut self, money: u32) {
+        self.allocated = Some(money)
     }
 
     /// get player's name or number (if name not provided)
@@ -63,14 +62,14 @@ impl Player {
     }
 }
 
-pub struct Round<'a> {
-    total: Money<'a, Currency>,
+pub struct Round {
+    total: Money,
     players: Vec<Player>,
     display_format: Format,
-    result: Option<Vec<Money<'a, Currency>>>,
+    result: Option<Vec<u32>>,
 }
 
-impl Round<'_> {
+impl Round {
     pub fn new(input: &[String]) -> Self {
         let mut players = vec![];
         let buy_amount = &input[1..];
@@ -78,7 +77,7 @@ impl Round<'_> {
             players.push(Player::new(i, item.to_owned()));
         }
         Self {
-            total: Money::from_str(&input[0], iso::TWD).unwrap(),
+            total: Money::from_str(&input[0]).unwrap(),
             players,
             display_format: Format::Table,
             result: None,
@@ -86,7 +85,7 @@ impl Round<'_> {
     }
 
     /// Allocate money and fill result into self and each player field.
-    pub fn allocate(&mut self) -> &Round<'_> {
+    pub fn allocate(&mut self) -> &Round {
         // get the allocated result and update to field
         self.result = Some(self.total.allocate(self.get_ratios()).unwrap());
         // update result to each player struct
@@ -98,17 +97,17 @@ impl Round<'_> {
     }
 
     /// Get ratios, price of each player bought
-    fn get_ratios(&self) -> Vec<i32> {
+    fn get_ratios(&self) -> Vec<u32> {
         let mut ratios = Vec::new();
         self.players
             .iter()
-            .for_each(|x| ratios.push(x.original.parse::<i32>().unwrap()));
+            .for_each(|x| ratios.push(x.original.parse::<u32>().unwrap()));
         ratios
     }
 
     /// Display result
     pub fn display(&self) {
-        println!("Total to be allocated: {}", self.total);
+        println!("Total to be allocated: {}", self.total.amount());
         match self.display_format {
             Format::Table => self.display_table(),
         }
@@ -173,10 +172,7 @@ mod test {
 
         assert_eq!(
             Round::new(input).allocate().result.as_ref().unwrap(),
-            &vec![
-                Money::from_str("36", iso::TWD).unwrap(),
-                Money::from_str("64", iso::TWD).unwrap(),
-            ]
+            &vec![36, 64]
         );
     }
 
