@@ -57,3 +57,30 @@ impl Money {
         Ok(Money::new(amount))
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::Money;
+
+    #[test]
+    fn test_allocate() {
+        assert_eq!(Money::new(100).allocate(vec![40, 70]), Ok(vec![36, 64]));
+        assert_eq!(
+            Money::new(100).allocate(vec![30, 20, 40, 50]),
+            Ok(vec![21, 14, 29, 36])
+        );
+        assert_eq!(
+            Money::new(100).allocate(vec![0, 100]),
+            Err("Ratio cannot be 0")
+        );
+        assert_eq!(
+            Money::new(100).allocate(vec![]),
+            Err("Ratios cannot be empty")
+        );
+    }
+
+    #[test]
+    fn test_from_str() {
+        assert_eq!(Money::from_str("100"), Ok(Money::new(100)));
+    }
+}
