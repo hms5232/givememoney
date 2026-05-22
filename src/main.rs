@@ -10,20 +10,20 @@ fn main() {
 
     // If no parameters or not enough parameters, show usage and wait for user input
     while args.len() < 3 {
-        println!(
+        // show information first
+        // then wait for user input money args
+        print!(
             "\
             givememoney v{}\n\
             To allocate money, input `gmm [total] [each participant separate by space]`\n\
             \n\
-            Check {} for more information and update.\
+            Check {} for more information and update.\n\
+            \n\
+            > gmm \
             ",
             env!("CARGO_PKG_VERSION"),
-            env!("CARGO_PKG_REPOSITORY"),
+            env!("CARGO_PKG_REPOSITORY")
         );
-
-        // show "gmm " and wait for user input money args
-        println!();
-        print!("> gmm ");
         std::io::stdout().flush().unwrap();
         // get user input and write to args
         let mut input = String::new();
