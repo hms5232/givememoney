@@ -60,7 +60,7 @@ jobs:
           target: ${{ inputs.target }}
           args: ${{ inputs.args }}
           strip: true
-      - uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v6
         with:
           # Name of the artifact to upload.
           # Optional. Default is 'artifact'
