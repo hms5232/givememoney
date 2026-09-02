@@ -1,6 +1,7 @@
-use crate::money::Money;
 use cli_table::format::Justify;
 use cli_table::{Cell, Style, Table};
+use money::Money;
+use std::str::FromStr;
 
 struct Player {
     index: usize,

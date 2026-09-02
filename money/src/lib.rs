@@ -1,6 +1,8 @@
 //! Simple money implementation
 //!
-//! Inspired by https://github.com/varunsrin/rusty_money/pull/104
+//! Inspired by <https://github.com/varunsrin/rusty_money/pull/104>
+
+use std::str::FromStr;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
 pub struct Money {
@@ -51,9 +53,13 @@ impl Money {
         }
         Ok(allocations)
     }
+}
 
-    pub(crate) fn from_str(p0: &str) -> Result<Money, &str> {
-        let amount = p0.parse::<u32>().unwrap();
+impl FromStr for Money {
+    type Err = ();
+
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let amount = s.parse::<u32>().unwrap();
         Ok(Money::new(amount))
     }
 }
@@ -61,6 +67,7 @@ impl Money {
 #[cfg(test)]
 mod tests {
     use super::Money;
+    use std::str::FromStr;
 
     #[test]
     fn test_allocate() {

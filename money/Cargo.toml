@@ -1,0 +1,9 @@
+[package]
+name = "money"
+version = "0.1.0"
+edition = "2024"
+description = "Simple money implementation."
+repository.workspace = true
+license.workspace = true
+
+[dependencies]

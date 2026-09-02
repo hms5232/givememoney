@@ -2,7 +2,6 @@ use std::env;
 use std::io::Write;
 
 mod mission;
-mod money;
 
 fn main() {
     let mut args: Vec<String> = env::args().collect();

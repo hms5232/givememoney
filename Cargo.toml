@@ -4,8 +4,8 @@ version = "1.1.0"
 edition = "2021"
 description = "Give me money! A CLI program to help you allocate money."
 readme = "README.md"
-repository = "https://github.com/hms5232/givememoney"
-license = "Apache-2.0"
+repository.workspace = true
+license.workspace = true
 keywords = ["givememoney"]
 categories = ["command-line-utilities"]
 
@@ -18,3 +18,11 @@ path = "./src/main.rs"
 
 [dependencies]
 cli-table = "0.4.7"
+money = { path = "./money" }
+
+[workspace]
+members = ["money"]
+
+[workspace.package]
+repository = "https://github.com/hms5232/givememoney"
+license = "Apache-2.0"
