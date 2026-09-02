@@ -2,6 +2,7 @@
 //!
 //! Inspired by <https://github.com/varunsrin/rusty_money/pull/104>
 
+use std::num::ParseIntError;
 use std::str::FromStr;
 
 #[derive(Debug, PartialEq, Eq, Clone, Copy)]
@@ -45,8 +46,16 @@ impl Money {
 
         // allocate the remainder to the player with the largest fraction
         while remainder > 0 {
-            let max = *fractions.iter().max_by(|a, b| a.total_cmp(b)).unwrap();
-            let index = fractions.iter().position(|&r| r == max).unwrap();
+            let max = match fractions.iter().max_by(|a, b| a.total_cmp(b)) {
+                Some(max) => *max,
+                None => return Err("Failed to find max fraction when allocating remainder"),
+            };
+            let index = match fractions.iter().position(|&r| r == max) {
+                Some(index) => index,
+                None => {
+                    return Err("Failed to find max index of fraction when allocating remainder");
+                }
+            };
             allocations[index] += 1;
             remainder -= 1;
             fractions[index] = 0.0;
@@ -56,11 +65,13 @@ impl Money {
 }
 
 impl FromStr for Money {
-    type Err = ();
+    type Err = ParseIntError;
 
     fn from_str(s: &str) -> Result<Self, Self::Err> {
-        let amount = s.parse::<u32>().unwrap();
-        Ok(Money::new(amount))
+        match s.parse::<u32>() {
+            Ok(amount) => Ok(Money::new(amount)),
+            Err(e) => Err(e),
+        }
     }
 }
 
@@ -89,5 +100,10 @@ mod tests {
     #[test]
     fn test_from_str() {
         assert_eq!(Money::from_str("100"), Ok(Money::new(100)));
+    }
+
+    #[test]
+    fn test_from_str_err() {
+        assert!(Money::from_str("a12").is_err());
     }
 }
