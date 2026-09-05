@@ -29,22 +29,22 @@ impl Player {
     }
 
     /// get player index of ratios
-    pub fn get_index(&self) -> usize {
+    pub fn index(&self) -> usize {
         self.index
     }
 
     /// get number (no.) of the player
-    fn get_number(&self) -> usize {
+    fn number(&self) -> usize {
         self.number
     }
 
     /// get original money
-    pub fn get_original(&self) -> String {
+    pub fn original(&self) -> String {
         self.original.clone()
     }
 
     /// get allocated amount
-    fn get_allocated(&self) -> String {
+    fn allocated(&self) -> String {
         self.allocated.unwrap().to_string()
     }
 
@@ -63,23 +63,6 @@ impl Player {
 }
 
 /// A single round of money allocation.
-///
-/// # Examples
-///
-/// ```
-/// use givememoney::Round;
-///
-/// let input = [
-///     String::from("100"),
-///     String::from("40"),
-///     String::from("Alice=70"),
-/// ];
-/// let mut round = Round::new(&input);
-/// round.allocate();
-///
-/// assert_eq!(round.get_total().amount(), 100);
-/// assert_eq!(round.get_result(), Some(&[36, 64][..]));
-/// ```
 pub struct Round {
     total: Money,
     players: Vec<Player>,
@@ -87,6 +70,24 @@ pub struct Round {
 }
 
 impl Round {
+    /// Create a new round from CLI arguments.
+    ///
+    /// # Examples
+    ///
+    /// ```rust
+    /// use givememoney::Round;
+    ///
+    /// let input = [
+    ///     String::from("100"),
+    ///     String::from("40"),
+    ///     String::from("Alice=70"),
+    /// ];
+    /// let mut round = Round::new(&input);
+    /// round.allocate();
+    ///
+    /// assert_eq!(round.total().amount(), 100);
+    /// assert_eq!(round.result(), Some(&[36, 64][..]));
+    /// ```
     pub fn new(input: &[String]) -> Self {
         let mut players = vec![];
         let buy_amount = &input[1..];
@@ -103,17 +104,17 @@ impl Round {
     /// Allocate money and fill result into self and each player field.
     pub fn allocate(&mut self) -> &Round {
         // get the allocated result and update to field
-        self.result = Some(self.total.allocate(self.get_ratios()).unwrap());
+        self.result = Some(self.total.allocate(self.ratios()).unwrap());
         // update result to each player struct
         self.players
             .iter_mut()
-            .for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.get_index()]));
+            .for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.index()]));
 
         self
     }
 
     /// Get ratios, price of each player bought
-    fn get_ratios(&self) -> Vec<u32> {
+    fn ratios(&self) -> Vec<u32> {
         let mut ratios = Vec::new();
         self.players
             .iter()
@@ -122,19 +123,19 @@ impl Round {
     }
 
     /// Get total
-    pub fn get_total(&self) -> Money {
+    pub fn total(&self) -> Money {
         self.total
     }
 
     /// Get all players
-    pub fn get_players(&self) -> &[Player] {
+    pub fn players(&self) -> &[Player] {
         self.players.as_slice()
     }
 
     /// Get allocation result
     ///
     /// `None` if [allocate()] has not been called yet.
-    pub fn get_result(&self) -> Option<&[u32]> {
+    pub fn result(&self) -> Option<&[u32]> {
         self.result.as_deref()
     }
 }
@@ -149,7 +150,7 @@ mod test {
         let args = vec![String::from("100"), String::from("40"), String::from("70")];
         let input: &[String] = &args[..];
 
-        assert_eq!(Round::new(input).get_ratios(), vec![40, 70]);
+        assert_eq!(Round::new(input).ratios(), vec![40, 70]);
     }
 
     #[test]

@@ -15,20 +15,20 @@ impl Mission {
 
     /// Display result
     pub fn display(&self) {
-        println!("Total to be allocated: {}", self.round.get_total().amount());
+        println!("Total to be allocated: {}", self.round.total().amount());
         self.display_table()
     }
 
     /// display with table format
     fn display_table(&self) {
         let mut table = Vec::new();
-        self.round.get_players().iter().for_each(|p| {
+        self.round.players().iter().for_each(|p| {
             table.push(vec![
                 p.get_player_name_or_number().cell(),
-                p.get_original().cell().justify(Justify::Right),
+                p.original().cell().justify(Justify::Right),
                 self.round
-                    .get_result()
-                    .map(|r| r[p.get_index()])
+                    .result()
+                    .map(|r| r[p.index()])
                     .unwrap()
                     .cell()
                     .justify(Justify::Right),
