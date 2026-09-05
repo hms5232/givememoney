@@ -1,5 +1,5 @@
 [package]
-name = "givememoney"
+name = "gmm"
 version = "1.1.0"
 edition = "2021"
 description = "Give me money! A CLI program to help you allocate money."
@@ -9,19 +9,17 @@ license.workspace = true
 keywords = ["givememoney"]
 categories = ["command-line-utilities"]
 
-[[bin]]
-# Specify filename of binary artifact
-name = "gmm"
-path = "./src/main.rs"
-
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 cli-table = "0.4.7"
-money = { path = "./money" }
+givememoney = { path = "./givememoney"}
 
 [workspace]
-members = ["money"]
+members = [
+    "givememoney",
+    "money",
+]
 
 [workspace.package]
 repository = "https://github.com/hms5232/givememoney"

@@ -40,9 +40,7 @@ fn main() {
         return;
     }
 
-    mission::Round::new(&args[1..args.len()])
-        .allocate()
-        .display();
+    mission::Mission::start(&args[1..args.len()]).display();
 
     if run_without_parameters {
         press_enter_to_exit()
