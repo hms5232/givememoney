@@ -13,11 +13,11 @@ categories = ["command-line-utilities"]
 
 [dependencies]
 cli-table = "0.4.7"
-givememoney = { path = "./givememoney"}
+givememoney = { path = "core" }
 
 [workspace]
 members = [
-    "givememoney",
+    "core",
     "money",
 ]
 
