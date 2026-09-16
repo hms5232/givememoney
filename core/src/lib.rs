@@ -5,27 +5,29 @@ use std::str::FromStr;
 pub struct Player {
     index: usize,
     number: usize,
-    original: String,
+    original: u32,
     allocated: Option<u32>,
     name: Option<String>,
 }
 
 impl Player {
-    fn new(index: usize, input: String) -> Self {
-        let mut name = None;
-        let mut original = input;
-        if original.contains('=') {
-            let split: Vec<&str> = original.split('=').collect();
-            name = Some(split[0].to_string());
-            original = split[1].to_string();
-        }
-        Self {
+    fn new(index: usize, input: String) -> Result<Self, Error> {
+        let (name, amount) = match input.split_once('=') {
+            Some((n, a)) => (Some(n.to_string()), a),
+            None => (None, input.as_str()),
+        };
+        let original: u32 = amount.parse::<u32>().map_err(|_| Error::InvalidNumber {
+            position: index,
+            value: amount.to_string(),
+            name: name.clone(),
+        })?;
+        Ok(Self {
             index,
             number: index + 1,
             original,
             allocated: None,
             name,
-        }
+        })
     }
 
     /// get player index of ratios
@@ -38,14 +40,17 @@ impl Player {
         self.number
     }
 
-    /// get original money
-    pub fn original(&self) -> String {
-        self.original.clone()
+    /// get original number
+    pub fn original(&self) -> u32 {
+        self.original
     }
 
     /// get allocated amount
-    fn allocated(&self) -> String {
-        self.allocated.unwrap().to_string()
+    fn allocated(&self) -> Result<u32, Error> {
+        match self.allocated {
+            Some(allocated) => Ok(allocated),
+            None => Err(Error::Unallocated),
+        }
     }
 
     /// update result of allocated to player
@@ -82,43 +87,50 @@ impl Round {
     ///     String::from("40"),
     ///     String::from("Alice=70"),
     /// ];
-    /// let mut round = Round::new(&input);
-    /// round.allocate();
+    /// let mut round = Round::new(&input).unwrap();
+    /// round.allocate().unwrap();
     ///
     /// assert_eq!(round.total().amount(), 100);
     /// assert_eq!(round.result(), Some(&[36, 64][..]));
     /// ```
-    pub fn new(input: &[String]) -> Self {
+    pub fn new(input: &[String]) -> Result<Self, Error> {
+        let total = match Money::from_str(input.first().ok_or(Error::EmptyInput)?) {
+            Ok(total) => total,
+            Err(_) => return Err(Error::MoneyError),
+        };
         let mut players = vec![];
         let buy_amount = &input[1..];
         for (i, item) in buy_amount.iter().enumerate() {
-            players.push(Player::new(i, item.to_owned()));
+            let player = Player::new(i, item.to_owned())?;
+            players.push(player)
         }
-        Self {
-            total: Money::from_str(&input[0]).unwrap(),
+        Ok(Self {
+            total,
             players,
             result: None,
-        }
+        })
     }
 
     /// Allocate money and fill result into self and each player field.
-    pub fn allocate(&mut self) -> &Round {
+    pub fn allocate(&mut self) -> Result<&Round, Error> {
         // get the allocated result and update to field
-        self.result = Some(self.total.allocate(self.ratios()).unwrap());
+        let result = self
+            .total
+            .allocate(self.ratios())
+            .map_err(|_| Error::MoneyError)?;
         // update result to each player struct
         self.players
             .iter_mut()
-            .for_each(|p| p.set_allocated(self.result.as_ref().unwrap()[p.index()]));
+            .for_each(|p| p.set_allocated(result[p.index()]));
 
-        self
+        self.result = Some(result);
+        Ok(self)
     }
 
     /// Get ratios, price of each player bought
     fn ratios(&self) -> Vec<u32> {
         let mut ratios = Vec::new();
-        self.players
-            .iter()
-            .for_each(|x| ratios.push(x.original.parse::<u32>().unwrap()));
+        self.players.iter().for_each(|x| ratios.push(x.original));
         ratios
     }
 
@@ -140,6 +152,20 @@ impl Round {
     }
 }
 
+#[derive(Debug)]
+pub enum Error {
+    /// Error from [`Money`].
+    MoneyError,
+    InvalidNumber {
+        position: usize,
+        value: String,
+        name: Option<String>,
+    },
+    /// The round is waiting for allocation.
+    Unallocated,
+    EmptyInput,
+}
+
 #[cfg(test)]
 mod test {
     use super::*;
@@ -150,7 +176,7 @@ mod test {
         let args = vec![String::from("100"), String::from("40"), String::from("70")];
         let input: &[String] = &args[..];
 
-        assert_eq!(Round::new(input).ratios(), vec![40, 70]);
+        assert_eq!(Round::new(input).unwrap().ratios(), vec![40, 70]);
     }
 
     #[test]
@@ -160,7 +186,13 @@ mod test {
         let input: &[String] = &args[..];
 
         assert_eq!(
-            Round::new(input).allocate().result.as_ref().unwrap(),
+            Round::new(input)
+                .unwrap()
+                .allocate()
+                .unwrap()
+                .result
+                .as_ref()
+                .unwrap(),
             &vec![36, 64]
         );
     }
@@ -173,6 +205,7 @@ mod test {
 
         let mut displayed_name = Vec::new();
         Round::new(input)
+            .unwrap()
             .players
             .iter()
             .for_each(|p| displayed_name.push(p.get_player_name_or_number()));
@@ -192,6 +225,7 @@ mod test {
 
         let mut displayed_name = Vec::new();
         Round::new(input)
+            .unwrap()
             .players
             .iter()
             .for_each(|p| displayed_name.push(p.get_player_name_or_number()));

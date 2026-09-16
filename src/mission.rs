@@ -8,8 +8,8 @@ pub(crate) struct Mission {
 
 impl Mission {
     pub fn start(input: &[String]) -> Self {
-        let mut round = Round::new(input);
-        round.allocate();
+        let mut round = Round::new(input).unwrap();
+        round.allocate().unwrap();
         Self { round }
     }
 
