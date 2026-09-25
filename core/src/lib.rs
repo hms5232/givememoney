@@ -36,7 +36,7 @@ impl Player {
     }
 
     /// get number (no.) of the player
-    fn number(&self) -> usize {
+    pub fn number(&self) -> usize {
         self.number
     }
 
@@ -46,11 +46,16 @@ impl Player {
     }
 
     /// get allocated amount
-    fn allocated(&self) -> Result<u32, Error> {
+    pub fn allocated(&self) -> Result<u32, Error> {
         match self.allocated {
             Some(allocated) => Ok(allocated),
             None => Err(Error::Unallocated),
         }
+    }
+
+    /// Get player name
+    pub fn name(&self) -> Option<&str> {
+        self.name.as_deref()
     }
 
     /// update result of allocated to player
@@ -60,7 +65,7 @@ impl Player {
 
     /// get player's name or number (if name not provided)
     pub fn get_player_name_or_number(&self) -> String {
-        match self.name.as_ref() {
+        match self.name() {
             Some(name) => name.to_owned(),
             None => self.number.to_string(),
         }
