@@ -85,10 +85,8 @@ pub fn allocate(data: JsValue) -> Result<JsValue, JsError> {
         None => p.amount.to_string(),
     }));
 
-    let mut round = Round::new(&input).map_err(|e| JsError::new(&format!("{e:?}")))?;
-    round
-        .allocate()
-        .map_err(|e| JsError::new(&format!("{e:?}")))?;
+    let mut round = Round::new(&input)?;
+    round.allocate()?;
 
     Ok(serde_wasm_bindgen::to_value(&RoundResponse {
         total: request.total,
@@ -100,9 +98,7 @@ pub fn allocate(data: JsValue) -> Result<JsValue, JsError> {
                     name: player.name().map(str::to_owned),
                     number: player.number(),
                     original: player.original(),
-                    allocated: player
-                        .allocated()
-                        .map_err(|e| JsError::new(&format!("{e:?}")))?,
+                    allocated: player.allocated()?,
                     display_name: player.get_player_name_or_number(),
                 })
             })

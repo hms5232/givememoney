@@ -1,3 +1,6 @@
+mod error;
+
+pub use error::Error;
 use money::Money;
 use std::str::FromStr;
 
@@ -101,7 +104,7 @@ impl Round {
     pub fn new(input: &[String]) -> Result<Self, Error> {
         let total = match Money::from_str(input.first().ok_or(Error::EmptyInput)?) {
             Ok(total) => total,
-            Err(_) => return Err(Error::MoneyError),
+            Err(e) => return Err(Error::MoneyError(e.to_string())),
         };
         let mut players = vec![];
         let buy_amount = &input[1..];
@@ -122,7 +125,7 @@ impl Round {
         let result = self
             .total
             .allocate(self.ratios())
-            .map_err(|_| Error::MoneyError)?;
+            .map_err(|e| Error::MoneyError(e.to_string()))?;
         // update result to each player struct
         self.players
             .iter_mut()
@@ -155,20 +158,6 @@ impl Round {
     pub fn result(&self) -> Option<&[u32]> {
         self.result.as_deref()
     }
-}
-
-#[derive(Debug)]
-pub enum Error {
-    /// Error from [`Money`].
-    MoneyError,
-    InvalidNumber {
-        position: usize,
-        value: String,
-        name: Option<String>,
-    },
-    /// The round is waiting for allocation.
-    Unallocated,
-    EmptyInput,
 }
 
 #[cfg(test)]
