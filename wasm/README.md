@@ -17,6 +17,12 @@ Then run the following command to build in this directory:
 wasm-pack build --target web
 ```
 
+or you can use [just](https://github.com/casey/just):
+
+```shell
+just build-wasm
+```
+
 The output will be generated in `./pkg/`.
 
 ## Usage
@@ -61,3 +67,11 @@ python -m http.server 8000
 ```
 
 Then open <http://localhost:8000> and check the result in the DevTools console.
+
+If you have [just](https://github.com/casey/just), you can build and serve in one command:
+
+```shell
+just serve-wasm 8000
+```
+
+replace `8000` with your preferred port.
