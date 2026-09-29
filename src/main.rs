@@ -70,7 +70,7 @@ fn main() {
 /// ```
 fn check_input(args: &[String]) -> Result<(), &str> {
     // check total (first argument)
-    if !is_natural_number(args.get(0).unwrap()) {
+    if !is_natural_number(args.first().unwrap()) {
         eprintln!("The first argument must be total amount of money, should not with name.");
         return Err("Bad argument: the first argument should be total.");
     }
