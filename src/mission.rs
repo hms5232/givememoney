@@ -1,6 +1,6 @@
 use cli_table::format::Justify;
 use cli_table::{Cell, Style, Table};
-use givememoney::Round;
+use givememoney_core::Round;
 
 pub(crate) struct Mission {
     round: Round,

@@ -1,6 +1,6 @@
 //! WebAssembly wrapper for givememoney
 
-use givememoney::Round;
+use givememoney_core::Round;
 use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 

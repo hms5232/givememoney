@@ -2,7 +2,7 @@ use std::fmt::{Display, Formatter};
 
 #[derive(Debug)]
 pub enum Error {
-    /// Error from [`Money`](money::Money).
+    /// Error from [`Money`](givememoney_money::Money).
     MoneyError(String),
     InvalidNumber {
         /// the index of this number, starts from 0.

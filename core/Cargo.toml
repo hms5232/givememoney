@@ -1,5 +1,5 @@
 [package]
-name = "givememoney"
+name = "givememoney-core"
 version = "1.1.0"
 edition = "2021"
 repository.workspace = true
@@ -9,4 +9,4 @@ keywords = ["givememoney"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-money = { path = "../money" }
+givememoney-money = { path = "../money" }

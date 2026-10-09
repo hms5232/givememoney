@@ -1,6 +1,6 @@
 # givememoney wasm
 
-A WebAssembly wrapper for the [`givememoney`](../core) crate.
+A WebAssembly wrapper for the [`givememoney-core`](../core) crate.
 
 ## Build
 

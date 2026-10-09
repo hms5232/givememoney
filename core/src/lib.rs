@@ -1,7 +1,7 @@
 mod error;
 
 pub use error::Error;
-use money::Money;
+use givememoney_money::Money;
 use std::str::FromStr;
 
 /// A participant in a money allocation round.
@@ -88,7 +88,7 @@ impl Round {
     /// # Examples
     ///
     /// ```rust
-    /// use givememoney::Round;
+    /// use givememoney_core::Round;
     ///
     /// let input = [
     ///     String::from("100"),
